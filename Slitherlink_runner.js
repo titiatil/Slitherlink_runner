@@ -315,7 +315,7 @@ function initializeBoard_normal() {
         }
     }
 
-    // random → 0 → 2*2 → 1 → random → 2 → 3*3 → 0,3 → 斜め祭り →randomだが量が多い
+    //random → 0 → 2*2 → 1 → random → 2 → 3*3 → 0,3 → 斜め祭り →randomだが量が多い
 
     Board = random_board(Board,B,0.15 + 25/20000,7,50)
 
@@ -338,7 +338,7 @@ function initializeBoard_normal() {
 
     Board = naname_board(Board,B,(0.15 + 425/20000)*2,400,450)
 
-    Board = random_board(Board,B,(0.15 + 475/20000)*4,450,500)
+    Board = random_board(Board,B,(0.15 + 475/20000)*2,450,500)
 
 
     // repeat
@@ -363,7 +363,7 @@ function initializeBoard_normal() {
 
     Board = naname_board(Board,B,(0.15 + 925/20000)*2,900,950)
 
-    Board = random_board(Board,B,(0.15 + 975/20000)*4,950,1000)
+    Board = random_board(Board,B,(0.15 + 975/20000)*2,950,1000)
 
     for (let y = 0; y < one_game.masume_tate-1; y++) {
         for (let x = 0; x < 6; x++) {
