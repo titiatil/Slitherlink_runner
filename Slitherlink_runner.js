@@ -144,12 +144,21 @@ function naname_board(Board,B,rand,l,r){
 function rect_board(Board,B,rand,l,r,xlen,ylen){
     for (let x = l; x < r; x++) {
         for (let y = 0; y < one_game.masume_tate-1; y++) {
+            if (y-1>=0 && Board[y-1][x]!=-1){
+                continue;
+            }
+            if (y+ylen < one_game.masume_tate-1 && Board[y+ylen][x-1]!=-1){
+                continue
+            }
+
+            if (Board[y][x-1]!=-1){
+                continue
+            }
+
             if (Math.random()<rand){
                 for (let xx = x; xx < x + xlen; xx++ ){
                     for (let yy = y; yy < y + ylen; yy++){
                         if (l<=xx && xx<r && yy < one_game.masume_tate-1){
-                            console.log(yy)
-                            console.log(xx)
                             Board[yy][xx]=B[yy][xx];
                         }
                     }
@@ -322,7 +331,7 @@ function initializeBoard_normal() {
     Board = random_board(Board,B,(0.15 + 75/20000)/5,50,100)
     Board = include_board(Board,B,[0],50,100)
 
-    Board = rect_board(Board,B,(0.15+125/20000)/3,100,150,2,2)
+    Board = rect_board(Board,B,(0.15+125/20000)/2,100,150,2,2)
 
     Board = random_board(Board,B,(0.15 + 175/20000)/5,150,200)
     Board = include_board(Board,B,[1],150,200)
@@ -332,7 +341,7 @@ function initializeBoard_normal() {
     Board = random_board(Board,B,(0.15 + 275/20000)/5,250,300)
     Board = include_board(Board,B,[2],250,300)
 
-    Board = rect_board(Board,B,(0.15+325/20000)/8,300,350,3,3)
+    Board = rect_board(Board,B,(0.15+325/20000)/2,300,350,3,3)
 
     Board = include_board(Board,B,[0,3],350,400)
 
@@ -347,7 +356,7 @@ function initializeBoard_normal() {
     Board = random_board(Board,B,(0.15 + 575/20000)/5,550,600)
     Board = include_board(Board,B,[0],550,600)
 
-    Board = rect_board(Board,B,(0.15+625/20000)/3,600,650,2,2)
+    Board = rect_board(Board,B,(0.15+625/20000)/2,600,650,2,2)
 
     Board = random_board(Board,B,(0.15 + 675/20000)/5,650,700)
     Board = include_board(Board,B,[1],650,700)
@@ -357,7 +366,7 @@ function initializeBoard_normal() {
     Board = random_board(Board,B,(0.15 + 775/20000)/5,750,800)
     Board = include_board(Board,B,[2],750,800)
 
-    Board = rect_board(Board,B,(0.15+825/20000)/8,800,850,3,3)
+    Board = rect_board(Board,B,(0.15+825/20000)/2,800,850,3,3)
 
     Board = include_board(Board,B,[0,3],850,900)
 
@@ -558,7 +567,7 @@ function visualize_board(masume_tate,masume_yoko,
     let passed_mass_x = (passedtime / game.mass) | 0
 
     for (let y = 0; y < masume_tate; y++) {
-        for (let x = passed_mass_x; x < passed_mass_x + 35; x++) {
+        for (let x = passed_mass_x; x < Math.min(passed_mass_x + 35,masume_yoko); x++) {
 
             // 頂点の丸、使っているもの
             if (Used[y][x]===1){
@@ -592,7 +601,7 @@ function visualize_board(masume_tate,masume_yoko,
 
     // 辺について
     for (let y = 0; y < masume_tate; y++) {
-        for (let x = passed_mass_x; x < passed_mass_x + 35; x++) {
+        for (let x = passed_mass_x; x < Math.min(passed_mass_x + 35,masume_yoko); x++) {
             ctx.beginPath();
             ctx.moveTo( x*game.mass+game.leftmargin+game.radius-passedtime, y*game.mass+game.upmargin );
             ctx.lineTo( (x+1)*game.mass+game.leftmargin-game.radius-passedtime, y*game.mass+game.upmargin );
@@ -638,7 +647,7 @@ function visualize_board(masume_tate,masume_yoko,
     // 文字について
 
     for (let y = 0; y < masume_tate; y++) {
-        for (let x = passed_mass_x; x < passed_mass_x + 35; x++) {
+        for (let x = passed_mass_x; x<Math.min(passed_mass_x + 35,masume_yoko); x++) {
             if (y+1<masume_tate){
                 if (Board[y][x]!=-1){
                     
@@ -714,6 +723,62 @@ function keydownfunc(event) {
     }
 
     if (game.status===1){
+        // UNDO操作。z/x/cを押したとき一歩戻る。
+
+        if ((key_code === 67)||(key_code === 88)||(key_code === 90)){
+            one_game.life-=1/10
+            if (one_game.Used_t[one_game.my_y][one_game.my_x] === 1){
+                one_game.Used_t[one_game.my_y][one_game.my_x] = 0;
+                one_game.Used[one_game.my_y][one_game.my_x] = 0;
+                one_game.my_y+=1
+
+                if (one_game.my_x<one_game.masume_yoko){
+                    one_game.Board2[one_game.my_y-1][one_game.my_x] -=1;
+                }
+                if (one_game.my_x-1>=0){
+                    one_game.Board2[one_game.my_y-1][one_game.my_x-1] -=1;
+                }
+            }
+
+            else if (one_game.Used_y[one_game.my_y][one_game.my_x] === 1){
+                one_game.Used_y[one_game.my_y][one_game.my_x] = 0;
+                one_game.Used[one_game.my_y][one_game.my_x] = 0;
+                one_game.my_x+=1
+                if (one_game.my_y-1>=0){
+                    one_game.Board2[one_game.my_y-1][one_game.my_x-1] -=1;
+                }
+                if (one_game.my_y<one_game.masume_tate-1){
+                    one_game.Board2[one_game.my_y][one_game.my_x-1] -=1;
+                }
+            }
+
+            else if (one_game.my_y-1 >= 0 && one_game.Used_t[one_game.my_y-1][one_game.my_x] === 1){
+                one_game.Used_t[one_game.my_y-1][one_game.my_x] = 0;
+                one_game.Used[one_game.my_y][one_game.my_x] = 0;
+                one_game.my_y-=1
+
+                if (one_game.my_x<one_game.masume_yoko){
+                    one_game.Board2[one_game.my_y][one_game.my_x] -=1;
+                }
+                if (one_game.my_x-1>=0){
+                    one_game.Board2[one_game.my_y][one_game.my_x-1] -=1;
+                }
+            }
+
+            else if (one_game.my_x-1>=0  && one_game.Used_y[one_game.my_y][one_game.my_x-1] === 1){
+                one_game.Used_y[one_game.my_y][one_game.my_x-1] = 0;
+                one_game.Used[one_game.my_y][one_game.my_x] = 0;
+                one_game.my_x-=1
+
+                if (one_game.my_y-1>=0){
+                    one_game.Board2[one_game.my_y-1][one_game.my_x] -=1;
+                }
+                if (one_game.my_y<one_game.masume_tate-1){
+                    one_game.Board2[one_game.my_y][one_game.my_x] -=1;
+                }
+            }
+
+        }
 
         // 上下左右について
         if (key_code === 39) {//　右
@@ -801,7 +866,13 @@ function visual(){
         game.status=2
         ctx.fillStyle = "black";
         ctx.font = "bold 80px serif";
-        ctx.fillText("Game Over",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
+
+        if (one_game.passedtime>(one_game.masume_yoko-2)*50){
+            ctx.fillText("Congratulations! You finishe!",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
+        }
+        else{
+            ctx.fillText("Game Over",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
+        }
     
         game.gameendtimecount = setInterval(gameendtime_wait, 2000);
     }
