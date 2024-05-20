@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 // game全般のこと
 const game = {
     status: 0, // 0:タイトル画面, 1:ゲーム画面, 2:ゲーム開始待ち, 3:ゲームオーバー
-    mode :1, //0: random mode , 1: normal mode
+    mode :1, //0: randomonly mode , 1: normal mode
     difficulty: 0, // Easy :0, Normal :1, Hard :2
     mass : 50, // マスのサイズ
     leftmargin : 150, // 左の余白
@@ -395,6 +395,189 @@ function initializeBoard_normal() {
     return [Board, Board2, Used, Used_t, Used_y, my_x, my_y,passedtime, life];
 }
 
+function initializeBoard_randomonly() {
+    const T = Array.from({ length: one_game.masume_tate }, () => Array(one_game.masume_yoko).fill(0));
+    const Y = Array.from({ length: one_game.masume_tate }, () => Array(one_game.masume_yoko).fill(0));
+
+    for (let j = 0; j < one_game.masume_yoko; j++) {
+        Y[5][j] = 1;
+    }
+
+    let Sumline=one_game.masume_yoko;
+
+    function four_direction(x, y) {
+        const RET = [T[x][y], Y[x][y]];
+
+        if (x - 1 >= 0) {
+            RET.push(T[x - 1][y]);
+        }
+        if (y - 1 >= 0) {
+            RET.push(Y[x][y - 1]);
+        }
+
+        return RET.reduce((a, b) => a + b, 0);
+    }
+
+    for (let i = 0; i < 50000; i++) {
+        const x = Math.floor(Math.random() * (T.length - 2));
+        const y = Math.floor(Math.random() * (T[0].length - 9)+7);
+
+        const A = [T[x][y], Y[x][y], T[x][y + 1], Y[x + 1][y]];
+
+        let SUM = A.reduce((a, b) => a + b, 0);
+
+        if (SUM === 1) {
+            if (Sumline>one_game.masume_yoko*6){
+                continue
+            }
+            if (T[x][y] === 1) {
+                if (four_direction(x, y + 1) === 0 && four_direction(x + 1, y + 1) === 0) {
+                    T[x][y] ^= 1;
+                    Y[x][y] ^= 1;
+                    T[x][y + 1] ^= 1;
+                    Y[x + 1][y] ^= 1;
+                    Sumline+=2;
+                }
+            }
+
+            if (Y[x][y] === 1) {
+                if (four_direction(x + 1, y) === 0 && four_direction(x + 1, y + 1) === 0) {
+                    T[x][y] ^= 1;
+                    Y[x][y] ^= 1;
+                    T[x][y + 1] ^= 1;
+                    Y[x + 1][y] ^= 1;
+                    Sumline+=2;
+                }
+            }
+
+            if (T[x][y + 1] === 1) {
+                if (four_direction(x, y) === 0 && four_direction(x + 1, y) === 0) {
+                    T[x][y] ^= 1;
+                    Y[x][y] ^= 1;
+                    T[x][y + 1] ^= 1;
+                    Y[x + 1][y] ^= 1;
+                    Sumline+=2;
+                }
+            }
+
+            if (Y[x + 1][y] === 1) {
+                if (four_direction(x, y) === 0 && four_direction(x, y + 1) === 0) {
+                    T[x][y] ^= 1;
+                    Y[x][y] ^= 1;
+                    T[x][y + 1] ^= 1;
+                    Y[x + 1][y] ^= 1;
+                    Sumline+=2;
+                }
+            }
+        } else if (SUM == 2) {
+            if (T[x][y] === 1 && Y[x][y] === 1) {
+                if (four_direction(x + 1, y + 1) === 0) {
+                    T[x][y] ^= 1;
+                    Y[x][y] ^= 1;
+                    T[x][y + 1] ^= 1;
+                    Y[x + 1][y] ^= 1;
+                }
+            }
+
+            if (Y[x][y] === 1 && T[x][y + 1] === 1) {
+                if (four_direction(x + 1, y) === 0) {
+                    T[x][y] ^= 1;
+                    Y[x][y] ^= 1;
+                    T[x][y + 1] ^= 1;
+                    Y[x + 1][y] ^= 1;
+                }
+            }
+
+            if (T[x][y + 1] === 1 && Y[x + 1][y] === 1) {
+                if (four_direction(x, y) === 0) {
+                    T[x][y] ^= 1;
+                    Y[x][y] ^= 1;
+                    T[x][y + 1] ^= 1;
+                    Y[x + 1][y] ^= 1;
+                }
+            }
+
+            if (Y[x + 1][y] === 1 && T[x][y] === 1) {
+                if (four_direction(x, y + 1) === 0) {
+                    T[x][y] ^= 1;
+                    Y[x][y] ^= 1;
+                    T[x][y + 1] ^= 1;
+                    Y[x + 1][y] ^= 1;
+                }
+            }
+        } else if (SUM == 3) {
+            T[x][y] ^= 1;
+            Y[x][y] ^= 1;
+            T[x][y + 1] ^= 1;
+            Y[x + 1][y] ^= 1;
+            Sumline-=2;
+
+        }
+    }
+
+    const B = Array(one_game.masume_tate-1).fill().map(() => Array(one_game.masume_yoko).fill(0));
+
+    let Board = Array(one_game.masume_tate-1).fill().map(() => Array(one_game.masume_yoko).fill(-1));
+    const Board2 = Array(one_game.masume_tate-1).fill().map(() => Array(one_game.masume_yoko).fill(0));
+    const Used = Array(one_game.masume_tate).fill().map(() => Array(one_game.masume_yoko).fill(0));
+    const Used_t = Array(one_game.masume_tate).fill().map(() => Array(one_game.masume_yoko).fill(0));
+    const Used_y = Array(one_game.masume_tate).fill().map(() => Array(one_game.masume_yoko).fill(0));
+    const my_x = 2;
+    const my_y = 5;
+    const passedtime = 0;
+    const life = 3;
+
+    Used[my_y][my_x] = 1;
+
+    for (let y = 0; y < one_game.masume_tate-1; y++) {
+        for (let x = 0; x < one_game.masume_yoko; x++) {
+            if (T[y][x] === 1) {
+                B[y][x] += 1;
+                if (x - 1 >= 0) {
+                    B[y][x - 1] += 1;
+                }
+            }
+
+            if (Y[y][x] === 1) {
+                B[y][x] += 1;
+                if (y - 1 >= 0) {
+                    B[y - 1][x] += 1;
+                }
+            }
+        }
+    }
+
+
+    for (let x = 7; x <1000 ; x++) {
+        for (let y = 0; y < one_game.masume_tate-1; y++) {
+            if (Math.random()<0.15+x/20000){
+                Board[y][x]=B[y][x];
+            }
+        }
+    }
+
+    for (let y = 0; y < one_game.masume_tate-1; y++) {
+        for (let x = 0; x < 6; x++) {
+            if (y-x===0){
+                Board[y][x] = B[y][x];
+            }
+            if (y-x===-1){
+                Board[y][x] = B[y][x];
+            }
+            if (one_game.masume_tate -2 - y===x){
+                Board[y][x] = B[y][x];
+            }
+            if (one_game.masume_tate -1 - y===x){
+                Board[y][x] = B[y][x];
+            }
+        }
+    }
+
+
+    return [Board, Board2, Used, Used_t, Used_y, my_x, my_y,passedtime, life];
+}
+
+
 
 
 function title_screen(masume_tate,masume_yoko,
@@ -522,7 +705,7 @@ function title_screen(masume_tate,masume_yoko,
     ctx.fillStyle = "darkgreen";
     ctx.font = "bold 50px serif";
     if (game.mode===0){
-        ctx.fillText("random mode",game.upmargin+(one_game.my_x+1)*game.mass + game.radius*2,game.leftmargin+(one_game.my_y+1.5)*game.mass + game.mass/2);
+        ctx.fillText("randomonly mode",game.upmargin+(one_game.my_x+1)*game.mass + game.radius*2,game.leftmargin+(one_game.my_y+1.5)*game.mass + game.mass/2);
     }
     else if (game.mode===1){
         ctx.fillText("normal mode",game.upmargin+(one_game.my_x+1)*game.mass + game.radius*2,game.leftmargin+(one_game.my_y+1.5)*game.mass + game.mass/2);
@@ -712,7 +895,7 @@ function keydownfunc(event) {
     if (game.status===0 && ((key_code === 39)||(key_code === 37)||(key_code === 40)||(key_code === 38))){
         one_game.passedtime=0;
         if (game.mode === 0){
-            [one_game.Board, one_game.Board2, one_game.Used, one_game.Used_t, one_game.Used_y, one_game.my_x,one_game.my_y,one_game.passedtime, one_game.life] = initialize_board();
+            [one_game.Board, one_game.Board2, one_game.Used, one_game.Used_t, one_game.Used_y, one_game.my_x,one_game.my_y,one_game.passedtime, one_game.life] = initializeBoard_randomonly();
         }
         else{
             [one_game.Board, one_game.Board2, one_game.Used, one_game.Used_t, one_game.Used_y, one_game.my_x,one_game.my_y,one_game.passedtime, one_game.life] = initializeBoard_normal();
@@ -901,7 +1084,7 @@ function gameendtime_wait(){
     let beforescore=(one_game.passedtime/10)|0;
 
     if (game.mode === 0){
-        [one_game.Board, one_game.Board2, one_game.Used, one_game.Used_t, one_game.Used_y, one_game.my_x,one_game.my_y,one_game.passedtime, one_game.life] = initialize_board();
+        [one_game.Board, one_game.Board2, one_game.Used, one_game.Used_t, one_game.Used_y, one_game.my_x,one_game.my_y,one_game.passedtime, one_game.life] = initializeBoard_randomonly();
     }
     else{
         [one_game.Board, one_game.Board2, one_game.Used, one_game.Used_t, one_game.Used_y, one_game.my_x,one_game.my_y,one_game.passedtime, one_game.life] = initializeBoard_normal();
@@ -912,7 +1095,7 @@ function gameendtime_wait(){
 }
 
 if (game.mode === 0){
-    [one_game.Board, one_game.Board2, one_game.Used, one_game.Used_t, one_game.Used_y, one_game.my_x,one_game.my_y,one_game.passedtime, one_game.life] = initialize_board();
+    [one_game.Board, one_game.Board2, one_game.Used, one_game.Used_t, one_game.Used_y, one_game.my_x,one_game.my_y,one_game.passedtime, one_game.life] = initializeBoard_randomonly();
 }
 else{
     [one_game.Board, one_game.Board2, one_game.Used, one_game.Used_t, one_game.Used_y, one_game.my_x,one_game.my_y,one_game.passedtime, one_game.life] = initializeBoard_normal();
