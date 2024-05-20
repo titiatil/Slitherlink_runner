@@ -1008,6 +1008,10 @@ function keydownfunc(event) {
 
         }
 
+        if ((key_code === 69)||(key_code === 81)||(key_code === 87)){
+            one_game.passedtime+=4
+        }
+
         // 上下左右について
         if (key_code === 39) {//　右
             if (one_game.my_x+1<one_game.masume_yoko && one_game.Used[one_game.my_y][one_game.my_x+1]===0){
