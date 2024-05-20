@@ -1,4 +1,4 @@
-# Slitherlink_runner（スリザーリンクランナー）
+# Slitherlink_runner（スリザーリンク・ランナー）
 
 [パズル通信ニコリ](https://www.nikoli.co.jp/)の[スリザーリンク](https://www.nikoli.co.jp/ja/puzzles/slitherlink/)を題材にした横スクロールの（アクション？）パズルゲームです。javascriptのみを使っています。
 
