@@ -1,11 +1,11 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-if (localStorage.getItem("localhighscore_normal") === null){
-    localStorage.setItem("localhighscore_normal", 0);
+if (localStorage.getItem("Slitherlink_runner_localhighscore_normal") === null){
+    localStorage.setItem("Slitherlink_runner_localhighscore_normal", 0);
 }
-if (localStorage.getItem("localhighscore_randomonly") === null){
-    localStorage.setItem("localhighscore_randomonly", 0);
+if (localStorage.getItem("Slitherlink_runner_localhighscore_randomonly") === null){
+    localStorage.setItem("Slitherlink_runner_localhighscore_randomonly", 0);
 }
 
 
@@ -19,8 +19,8 @@ const game = {
     upmargin : 150, // 上の余白
     radius : 10, // 半径
     gameendtimecount : null,
-    highscore_normal :localStorage.getItem("localhighscore_normal"),
-    highscore_randomonly :localStorage.getItem("localhighscore_randomonly")
+    highscore_normal :localStorage.getItem("Slitherlink_runner_localhighscore_normal"),
+    highscore_randomonly :localStorage.getItem("Slitherlink_runner_localhighscore_randomonly")
 }
 
 // 一つのgameに登場する記号たち
@@ -626,6 +626,8 @@ function title_screen(masume_tate,masume_yoko,
         highscore = game.highscore_randomonly
     }
 
+    console.log(highscore);
+
     ctx.fillStyle = "#000000";
     ctx.font = "bold 40px serif";
     ctx.fillText("Highscore:"+String((highscore/10)|0), 800, 100);
@@ -1087,14 +1089,14 @@ function visual(){
         ctx.fillText("Game Over",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
 
         if (game.mode === 0){
-            if (localStorage.getItem("localhighscore_normal") < one_game.passedtime){
-                localStorage.setItem("localhighscore_normal", one_game.passedtime);
+            if (localStorage.getItem("Slitherlink_runner_localhighscore_normal") < one_game.passedtime){
+                localStorage.setItem("Slitherlink_runner_localhighscore_normal", one_game.passedtime);
                 game.highscore_normal = one_game.passedtime
             }
         }
         if (game.mode === 1){
-            if (localStorage.getItem("localhighscore_randomonly") < one_game.passedtime){
-                localStorage.setItem("localhighscore_randomonly", one_game.passedtime);
+            if (localStorage.getItem("Slitherlink_runner_localhighscore_randomonly") < one_game.passedtime){
+                localStorage.setItem("Slitherlink_runner_localhighscore_randomonly", one_game.passedtime);
                 game.highscore_randomonly = one_game.passedtime
             }
         }
@@ -1121,14 +1123,14 @@ function visual(){
         }
 
         if (game.mode === 0){
-            if (localStorage.getItem("localhighscore_normal") < one_game.passedtime){
-                localStorage.setItem("localhighscore_normal", one_game.passedtime);
+            if (localStorage.getItem("Slitherlink_runner_localhighscore_normal") < one_game.passedtime){
+                localStorage.setItem("Slitherlink_runner_localhighscore_normal", one_game.passedtime);
                 game.highscore_normal = one_game.passedtime
             }
         }
         if (game.mode === 1){
-            if (localStorage.getItem("localhighscore_randomonly") < one_game.passedtime){
-                localStorage.setItem("localhighscore_randomonly", one_game.passedtime);
+            if (localStorage.getItem("Slitherlink_runner_localhighscore_randomonly") < one_game.passedtime){
+                localStorage.setItem("Slitherlink_runner_localhighscore_randomonly", one_game.passedtime);
                 game.highscore_randomonly = one_game.passedtime
             }
         }
