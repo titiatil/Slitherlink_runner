@@ -15,7 +15,7 @@ const game = {
     mode :1, //0: randomonly mode , 1: normal mode
     difficulty: 0, // Easy :0, Normal :1, Hard :2
     mass : 50, // マスのサイズ
-    leftmargin : 150, // 左の余白
+    leftmargin : 50, // 左の余白
     upmargin : 150, // 上の余白
     radius : 10, // 半径
     gameendtimecount : null,
@@ -707,14 +707,6 @@ function title_screen(masume_tate,masume_yoko,
     ctx.fillStyle = "#dd2222";
     ctx.fill();
     ctx.stroke();
-
-
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = "#cccc33";
-    ctx.fillStyle = "#dd2222";
-    ctx.fill();
-    ctx.stroke();
-
 
     ctx.fillStyle = "#999922";
     ctx.fillRect(game.leftmargin-20-game.radius, game.upmargin-game.radius-game.radius, 20, game.mass*masume_tate-game.radius);
