@@ -1111,8 +1111,8 @@ function visual(){
         ctx.fillStyle = "black";
         ctx.font = "bold 80px serif";
 
-        if (one_game.passedtime>(one_game.masume_yoko-2)*50){
-            ctx.fillText("Congratulations! You finishe!",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
+        if (one_game.passedtime>(one_game.masume_yoko-2)*game.mass){
+            ctx.fillText("Congratulations! You finish!",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
         }
         else{
             ctx.fillText("Game Over",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
