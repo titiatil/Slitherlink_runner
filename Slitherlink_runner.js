@@ -1082,7 +1082,7 @@ function visual(){
         game.status=2
         ctx.fillStyle = "black";
         ctx.font = "bold 80px serif";
-        ctx.fillText("Game Over",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
+        ctx.fillText("Game Over",game.leftmargin+2*game.mass + game.radius*2,game.upmargin+5*game.mass + game.mass/2);
 
         if (game.mode === 0){
             if (localStorage.getItem("Slitherlink_runner_localhighscore_normal") < one_game.passedtime){
@@ -1112,10 +1112,10 @@ function visual(){
         ctx.font = "bold 80px serif";
 
         if (one_game.passedtime>(one_game.masume_yoko-2)*game.mass){
-            ctx.fillText("Congratulations! You finish!",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
+            ctx.fillText("Congratulations! You finish!",game.leftmargin+2*game.mass + game.radius*2,game.upmargin+5*game.mass + game.mass/2);
         }
         else{
-            ctx.fillText("Game Over",game.upmargin+2*game.mass + game.radius*2,game.leftmargin+5*game.mass + game.mass/2);
+            ctx.fillText("Game Over",game.leftmargin+2*game.mass + game.radius*2,game.upmargin+5*game.mass + game.mass/2);
         }
 
         if (game.mode === 0){
