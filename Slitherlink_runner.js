@@ -626,8 +626,6 @@ function title_screen(masume_tate,masume_yoko,
         highscore = game.highscore_randomonly
     }
 
-    console.log(highscore);
-
     ctx.fillStyle = "#000000";
     ctx.font = "bold 40px serif";
     ctx.fillText("Highscore:"+String((highscore/10)|0), 800, 100);
